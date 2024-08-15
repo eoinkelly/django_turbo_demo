@@ -1,0 +1,84 @@
+[tool.poetry]
+authors = ["Jonathan Moss <xirisr@gmail.com>"]
+description = ""
+name = "turbo_demo"
+packages = [{include = "turbo_demo", from = "src"}]
+readme = "README.md"
+version = "0.1.0"
+
+[tool.poetry.scripts]
+manage = "turbo_demo.manage:main"
+
+[tool.poetry.dependencies]
+django = "^5.0"
+django-environ = "^0.11.2"
+psycopg = "^3.1.12"
+python = "^3.12"
+uvicorn = "^0.24.0"
+uvloop = { version = "^0.19.0", markers = "sys_platform != 'win32'" }
+gunicorn = "^22.0.0"
+
+[tool.poetry.group.dev.dependencies]
+bandit = "^1.7.4"
+black = "^24.3.0"
+django-stubs = "^5.0.2"
+factory-boy = "^3.3.0"
+flake8 = "^6.1.0"
+flake8-bandit = "^4.1.1"
+flake8-black = "^0.3.6"
+flake8-bugbear = "^23.9.16"
+flake8-builtins = "^2.2.0"
+flake8-isort = "^6.1.1"
+invoke = "^2.2.0"
+ipython = "^8.17.2"
+isort = "^5.12.0"
+mkdocs = "^1.5.3"
+mkdocs-material = "^9.4.8"
+mkdocstrings = "^0.23.0"
+mypy = "^1.11.0"
+poetry = "^1.7.0"
+pudb = "^2023.1"
+pytest = "^7.4.3"
+pytest-cov = "^4.1.0"
+pytest-django = "^4.8.0"
+pytest-playwright = "^0.4.3"
+pytest-spec = "^3.2.0"
+
+[build-system]
+build-backend = "poetry.core.masonry.api"
+requires = ["poetry-core"]
+
+[tool.mypy]
+strict = true
+plugins = ["mypy_django_plugin.main"]
+
+[[tool.mypy.overrides]]
+ignore_missing_imports = true
+module = "environ"
+
+[tool.django-stubs]
+django_settings_module = "turbo_demo.main.settings"
+
+[tool.isort]
+profile = "black"
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "turbo_demo.main.settings"
+addopts = "--rootdir src --spec"
+norecursedirs = ".git .venv docs data"
+spec_header_format = "{test_case} [{module_path}]:"
+
+markers = """
+    functional: functions/end-to-end tests
+    system: Regular integration and unit tests
+"""
+
+# We should never be dealing with naive datetimes. If we need to test with
+# naive datetimes, we should explicitly catch the warning in the test.
+# Otherwise, naive datetimes should raise errors.
+filterwarnings = """
+    error:.*received a naive datetime:RuntimeWarning:django.db.models.fields
+"""
+
+[tool.coverage.run]
+omit = ["**/migrations/*"]
