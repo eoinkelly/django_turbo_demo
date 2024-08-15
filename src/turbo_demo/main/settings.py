@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     # Third party
     # Local
     "turbo_demo.accounts",
+    "coffee_shop",
 ]
 
 MIDDLEWARE = [
